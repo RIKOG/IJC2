@@ -6,7 +6,29 @@
 
 #IncludeRegexTransform: 
 
-E:/CRAJKOG/Desktop/IJC2/tail.c
+E:/GitHub/IJC2/error.c
+error.h
+E:/GitHub/IJC2/error.h
+stdarg.h
+-
 stdio.h
 -
+
+E:/GitHub/IJC2/error.h
+stdio.h
+-
+stdarg.h
+-
+stdlib.h
+-
+
+E:/GitHub/IJC2/tail.c
+stdio.h
+-
+stdlib.h
+-
+string.h
+-
+error.c
+E:/GitHub/IJC2/error.c
 

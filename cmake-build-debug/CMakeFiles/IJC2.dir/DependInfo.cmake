@@ -4,7 +4,7 @@ set(CMAKE_DEPENDS_LANGUAGES
   )
 # The set of files for implicit dependencies of each language:
 set(CMAKE_DEPENDS_CHECK_C
-  "E:/CRAJKOG/Desktop/IJC2/tail.c" "E:/CRAJKOG/Desktop/IJC2/cmake-build-debug/CMakeFiles/IJC2.dir/tail.c.obj"
+  "E:/GitHub/IJC2/tail.c" "E:/GitHub/IJC2/cmake-build-debug/CMakeFiles/IJC2.dir/tail.c.obj"
   )
 set(CMAKE_C_COMPILER_ID "GNU")
 
