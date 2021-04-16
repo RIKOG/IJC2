@@ -3,22 +3,22 @@
 #include <string.h>
 #include "error.c"
 //todo pridat kontrolu ci sa podaril malloc
-typedef struct riadok {
-    char riadok[545];
-    struct riadok *p_dalsi_riadok;
-} RIADOK;
+typedef struct line {
+    char line[545];
+    struct line *p_next_line;
+} LINE;
 
 int main(int argc, char *argv[]) {
-    int c, i = 0, pocet_riadkov_argument = 10, pocet_riadkov_struct = 0;
+    int c, i = 0, n_of_lines_argument = 10, n_of_lines_struct = 0;
 
-    RIADOK *head = NULL;
-    RIADOK *line_ptr = (RIADOK *) malloc(sizeof(RIADOK));
+    LINE *head = NULL;
+    LINE *line_ptr = (LINE *) malloc(sizeof(LINE));
     // We want to be able to find the end of the struct chain thanks to the last pointer being NULL
-    line_ptr->p_dalsi_riadok = NULL;
+    line_ptr->p_next_line = NULL;
 
     FILE *fp = fopen(argv[1], "r");
     if(fp == NULL){
-        warning_msg("Nepodarilo sa otvorit subor", argv[1]);
+        warning_msg("The file failed to open", argv[1]);
         return -1;
     }
 
@@ -28,16 +28,16 @@ int main(int argc, char *argv[]) {
                 head = line_ptr;
             }
             // If we found the needed amount of lines, we just want to "move" them along the chain backwards
-            if (pocet_riadkov_struct == pocet_riadkov_argument){
+            if (n_of_lines_struct == n_of_lines_argument){
                 //tu chcem odstranit prvy struct a pripojit dalsi na konci retaze
             }
-            pocet_riadkov_struct++;
+            n_of_lines_struct++;
             // todo there will be a problem when the text file will end with \n and then right away with EOF, there is getc because we dont want \n written in our struct
             // todo write a limiter for the maximum amount of characters in one line
             line_ptr
             c = getc;
         }
-        line_ptr->riadok[i++] = c;
+        line_ptr->line[i++] = c;
 
 //        printf("%c", c);
 
