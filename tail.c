@@ -4,7 +4,7 @@
 #include "error.c"
 //todo pridat kontrolu ci sa podaril malloc
 typedef struct line {
-    char line[545];
+    char line[512];
     struct line *p_next_line;
 } LINE;
 
@@ -25,6 +25,7 @@ int main(int argc, char *argv[]) {
 
     while((c = getc(fp)) != EOF){
         if(c == '\n'){
+            line_ptr->line[i++] = '\0';
             if(head == NULL){
                 head = line_ptr;
             }
@@ -43,7 +44,7 @@ int main(int argc, char *argv[]) {
             line_ptr->p_next_line = NULL;
             // We connect our newly created struct to the last one
             tmp_ptr->p_next_line = line_ptr;
-            c = getc;
+            c = getc(fp);
             i = 0;
         }
         line_ptr->line[i++] = c;
