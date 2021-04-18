@@ -3,6 +3,7 @@
 #include <string.h>
 #include "error.c"
 //todo pridat kontrolu ci sa podaril malloc
+//todo add +5 POSIX features
 typedef struct line {
     char line[512];
     struct line *p_next_line;
@@ -25,32 +26,37 @@ int main(int argc, char *argv[]) {
 
     while((c = getc(fp)) != EOF){
         if(c == '\n'){
-            line_ptr->line[i++] = '\0';
+            line_ptr->line[i] = '\0';
             if(head == NULL){
                 head = line_ptr;
             }
+            c = getc(fp);
+            // Solving a problem where the text file doesnt end with \nEOF but just with EOF
+            if(c == EOF){
+                ungetc(c, fp);
+                break;
+            }
             // If we found the needed amount of lines, we just want to "move" them along the chain backwards
-            if (n_of_lines_struct >= n_of_lines_argument){
+            if (n_of_lines_struct >= n_of_lines_argument - 1){
                 tmp_ptr = head->p_next_line;
                 free(head);
                 head = tmp_ptr;
             }
-            // todo there will be a problem when the text file will end with \n and then right away with EOF, there is getc because we dont want \n written in our struct
-            // todo write a limiter for the maximum amount of characters in one line
-            // todo malloc another struct when theres EOF right after the \n? surely not fix it!!
+            // todo write a limiter for the maximum amount of characters in one line 512
             n_of_lines_struct++;
             tmp_ptr = line_ptr;
             line_ptr = (LINE *) malloc(sizeof(LINE));
             line_ptr->p_next_line = NULL;
             // We connect our newly created struct to the last one
             tmp_ptr->p_next_line = line_ptr;
-            c = getc(fp);
             i = 0;
         }
         line_ptr->line[i++] = c;
     }
+    // If last line in text file ends just with EOF if statement doesnt get triggered, we need to set line[i] to \0
+    line_ptr->line[i] = '\0';
     tmp_ptr = head;
-    while(tmp_ptr->p_next_line != NULL){
+    while(tmp_ptr != NULL){
         printf("%s\n", tmp_ptr->line);
         tmp_ptr = tmp_ptr->p_next_line;
     }
