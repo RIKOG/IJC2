@@ -2,17 +2,35 @@
 #include <stdlib.h>
 #include <string.h>
 #include "error.c"
+// Riesenie IJC-DU2, priklad a), 18.4.2021
+// Autor: Richard Gajdosik, FIT
+// Prelozene: gcc 9.3
 //todo pridat kontrolu ci sa podaril malloc a otváranie súboru
 //todo add +5 POSIX features
 //todo free allocated space
+
 typedef struct line {
     char line[512];
     struct line *p_next_line;
 } LINE;
 
+void free_struct(LINE *head){
+    LINE *tmp_ptr = head->p_next_line;
+    while(head != NULL){
+        free(head);
+        head = tmp_ptr;
+        if(head != NULL){
+            tmp_ptr = tmp_ptr->p_next_line;
+        }
+    }
+}
+
 int main(int argc, char *argv[]) {
     int c, i = 0, n_of_lines_argument = 10, n_of_lines_struct = 0;
+    if(argc > 4){
+        error_exit("Too much arguments!");
 
+    }
     LINE *head = NULL;
     LINE *line_ptr = (LINE *) malloc(sizeof(LINE));
     LINE *tmp_ptr = NULL;
@@ -21,8 +39,7 @@ int main(int argc, char *argv[]) {
 
     FILE *fp = fopen(argv[1], "r");
     if(fp == NULL){
-        warning_msg("The file failed to open", argv[1]);
-        return -1;
+        error_exit("The file failed to open!");
     }
 
     while((c = getc(fp)) != EOF){
@@ -73,5 +90,6 @@ int main(int argc, char *argv[]) {
         printf("%s\n", tmp_ptr->line);
         tmp_ptr = tmp_ptr->p_next_line;
     }
+    free_struct(head);
     return 0;
 }
