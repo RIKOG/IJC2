@@ -2,8 +2,9 @@
 #include <stdlib.h>
 #include <string.h>
 #include "error.c"
-//todo pridat kontrolu ci sa podaril malloc
+//todo pridat kontrolu ci sa podaril malloc a otváranie súboru
 //todo add +5 POSIX features
+//todo free allocated space
 typedef struct line {
     char line[512];
     struct line *p_next_line;
@@ -25,7 +26,20 @@ int main(int argc, char *argv[]) {
     }
 
     while((c = getc(fp)) != EOF){
-        if(c == '\n'){
+        if(c == '\n' || i == 511){
+            // Making sure lines arent longer than 512 characters with reserving one last index in an array for \0
+            if(i == 511){
+                // We toss the rest of the line
+                while(c != '\n'){
+                    // Solving a problem where the text file ends while tossing, we return EOF back so another if statement can catch it and end the main while loop
+                    if(c == EOF){
+                        ungetc(c, fp);
+                        break;
+                    }
+                    c = getc(fp);
+                }
+            }
+
             line_ptr->line[i] = '\0';
             if(head == NULL){
                 head = line_ptr;
@@ -42,7 +56,6 @@ int main(int argc, char *argv[]) {
                 free(head);
                 head = tmp_ptr;
             }
-            // todo write a limiter for the maximum amount of characters in one line 512
             n_of_lines_struct++;
             tmp_ptr = line_ptr;
             line_ptr = (LINE *) malloc(sizeof(LINE));
