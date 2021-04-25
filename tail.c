@@ -4,10 +4,9 @@
 // Riesenie IJC-DU2, priklad a), 18.4.2021
 // Autor: Richard Gajdosik, FIT
 // Prelozene: gcc 9.3
-//todo pridat kontrolu ci sa podaril malloc a otváranie súboru
+//todo add +5 POSIX features
 //todo free allocated space
 //todo more arguments
-//todo test with zero
 
 typedef struct line {
     char line[512];
@@ -64,6 +63,9 @@ int main(int argc, char *argv[]) {
         }
         LINE *head = NULL;
         LINE *line_ptr = (LINE *) malloc(sizeof(LINE));
+        if(line_ptr == NULL){
+            fprintf(stderr, "%s", "Allocation of space failed!\n");
+        }
         LINE *tmp_ptr = NULL;
         // We want to be able to find the end of the struct chain thanks to the last pointer being NULL
         line_ptr->p_next_line = NULL;
@@ -117,6 +119,9 @@ int main(int argc, char *argv[]) {
 
                 tmp_ptr = line_ptr;
                 line_ptr = (LINE *) malloc(sizeof(LINE));
+                if(line_ptr == NULL){
+                    fprintf(stderr, "%s", "Allocation of space failed!\n");
+                }
                 line_ptr->p_next_line = NULL;
                 // We connect our newly created struct to the last one if we didnt free the chain before
                 if(tmp_ptr != NULL){
@@ -151,7 +156,7 @@ int main(int argc, char *argv[]) {
                 // Special case where there is argument -n +x bigger than lines loaded (if statement in main loop doesnt get triggered)
                 if(posix_sign_plus == 1 && n_of_lines_struct <= n_of_lines_argument_int){
                 } else {
-                printf("%s\n", tmp_ptr->line);
+                    printf("%s\n", tmp_ptr->line);
                 }
             }
             tmp_ptr = tmp_ptr->p_next_line;
