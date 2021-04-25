@@ -5,7 +5,6 @@
 // Autor: Richard Gajdosik, FIT
 // Prelozene: gcc 9.3
 //todo pridat kontrolu ci sa podaril malloc a otváranie súboru
-//todo add +5 POSIX features
 //todo free allocated space
 //todo more arguments
 //todo test with zero
@@ -16,12 +15,14 @@ typedef struct line {
 } LINE;
 
 void free_struct(LINE *head){
-    LINE *tmp_ptr = head->p_next_line;
-    while(head != NULL){
-        free(head);
-        head = tmp_ptr;
-        if(head != NULL){
-            tmp_ptr = tmp_ptr->p_next_line;
+    if(head != NULL){
+        LINE *tmp_ptr = head->p_next_line;
+        while(head != NULL){
+            free(head);
+            head = tmp_ptr;
+            if(head != NULL){
+                tmp_ptr = tmp_ptr->p_next_line;
+            }
         }
     }
 }
@@ -44,7 +45,6 @@ int main(int argc, char *argv[]) {
                 n_of_lines_argument_int = atoi(n_of_lines_argument_char);
                 // We have to count the lines from start in the main loop
                 if(n_of_lines_argument_char[0] == '+'){
-                    // todo rethink the logic of the main loop
                     posix_sign_plus = 1;
                 }
                 // If argument contains zero or non numeric characters, atoi returns numbers encountered until that point or zero
@@ -83,6 +83,7 @@ int main(int argc, char *argv[]) {
                         // Solving a problem where the text file ends while tossing, we return EOF back so another if statement can catch it and end the main while loop
                         if(c == EOF){
                             ungetc(c, fp);
+                            n_of_lines_struct++;
                             break;
                         }
                         c = getc(fp);
@@ -100,11 +101,10 @@ int main(int argc, char *argv[]) {
                     break;
                 }
                 n_of_lines_struct++;
-                // TODO SHOULDNT WORK WITH ONLY ONE LINE IN FILE
                 // If we encounter -n +5 for example we want to use a different approach
                 if(posix_sign_plus == 0){
-                // If we found the needed amount of lines, we just want to "move" them along the chain backwards
-                    if (n_of_lines_struct >= n_of_lines_argument_int){
+                    // If we found the needed amount of lines, we just want to "move" them along the chain backwards
+                    if (n_of_lines_struct >= n_of_lines_argument_int && n_of_lines_argument_int != 1){
                         tmp_ptr = head->p_next_line;
                         free(head);
                         head = tmp_ptr;
@@ -127,10 +127,33 @@ int main(int argc, char *argv[]) {
             line_ptr->line[i++] = c;
         }
         // If last line in text file ends just with EOF if statement doesnt get triggered, we need to set line[i] to \0
+        n_of_lines_struct++;
         line_ptr->line[i] = '\0';
+
+        /* If we only read one line, it wont get saved in head pointer in the main loop so we have to do it now, or
+         it wont manage to check conditions if we even want that one line */
+        if(head == NULL){
+            head = line_ptr;
+        }
+        // If we have only one line in the file and also we want to start from second line +1 we need to delete the one line we loaded
+        if(head->p_next_line == NULL && n_of_lines_argument_int == 1 && posix_sign_plus == 1){
+            free(head);
+            head = NULL;
+        }
         tmp_ptr = head;
         while(tmp_ptr != NULL){
-            printf("%s\n", tmp_ptr->line);
+            //  Special case where we want only one line to print
+            if(n_of_lines_argument_int == 1 && posix_sign_plus == 0){
+                if(tmp_ptr->p_next_line == NULL){
+                    printf("%s\n", tmp_ptr->line);
+                }
+            } else {
+                // Special case where there is argument -n +x bigger than lines loaded (if statement in main loop doesnt get triggered)
+                if(posix_sign_plus == 1 && n_of_lines_struct <= n_of_lines_argument_int){
+                } else {
+                printf("%s\n", tmp_ptr->line);
+                }
+            }
             tmp_ptr = tmp_ptr->p_next_line;
         }
         free_struct(head);
