@@ -141,6 +141,9 @@ int main(int argc, char *argv[]) {
             if (line_ptr == NULL) {
                 fprintf(stderr, "%s", "Allocation of space failed!\n");
                 free_struct(head);
+                if (fclose(fp) == EOF) {
+                    fprintf(stderr, "%s", "Closing file failed!\n");
+                }
                 exit(1);
             }
             line_ptr->p_next_line = NULL;
@@ -183,5 +186,8 @@ int main(int argc, char *argv[]) {
         tmp_ptr = tmp_ptr->p_next_line;
     }
     free_struct(head);
+    if (fclose(fp) == EOF) {
+        fprintf(stderr, "%s", "Closing file failed!\n");
+    }
     return 0;
 }
