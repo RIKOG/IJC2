@@ -27,7 +27,7 @@ void free_struct(LINE *head){
 }
 
 int main(int argc, char *argv[]) {
-    int c, i = 0, n_of_lines_argument_int = 10, n_of_lines_struct = 0;
+    int c, i = 0, n_of_lines_argument_int = 10, n_of_lines_struct = 0, posix_sign_plus = 0;
     char n_of_lines_argument_char[10000] = {0};
     if(argc > 4){
         fprintf(stderr, "%s", "Too much arguments!\n");
@@ -40,16 +40,16 @@ int main(int argc, char *argv[]) {
             if(strcmp(argv[1], "-n") == 0){
                 // We copy the content of the next argument to check if we count the number of lines from the start or end
                 strcpy(n_of_lines_argument_char, argv[2]);
+                // Conversion from char array to int
+                n_of_lines_argument_int = atoi(n_of_lines_argument_char);
                 // We have to count the lines from start in the main loop
                 if(n_of_lines_argument_char[0] == '+'){
                     // todo rethink the logic of the main loop
-                    printf("test\n");
+                    posix_sign_plus = 1;
                 }
-                // Conversion from char array to int
-                n_of_lines_argument_int = atoi(n_of_lines_argument_char);
                 // If argument contains zero or non numeric characters, atoi returns numbers encountered until that point or zero
                 if(n_of_lines_argument_int == 0){
-                    fprintf(stderr, "%s", "argument after -n didnt contain any numbers or you put in 0!\n");
+                    fprintf(stderr, "%s", "argument after -n didnt start with any numeric characters or you put only 0 in!\n");
                     exit(1);
                 }
                 // Getting absolute value of argument if the number was written with "-" infront of it
@@ -99,18 +99,29 @@ int main(int argc, char *argv[]) {
                     ungetc(c, fp);
                     break;
                 }
-                // If we found the needed amount of lines, we just want to "move" them along the chain backwards
-                if (n_of_lines_struct >= n_of_lines_argument_int - 1){
-                    tmp_ptr = head->p_next_line;
-                    free(head);
-                    head = tmp_ptr;
-                }
                 n_of_lines_struct++;
+                // TODO SHOULDNT WORK WITH ONLY ONE LINE IN FILE
+                // If we encounter -n +5 for example we want to use a different approach
+                if(posix_sign_plus == 0){
+                // If we found the needed amount of lines, we just want to "move" them along the chain backwards
+                    if (n_of_lines_struct >= n_of_lines_argument_int){
+                        tmp_ptr = head->p_next_line;
+                        free(head);
+                        head = tmp_ptr;
+                    }
+                } else if(posix_sign_plus == 1){
+                    if(n_of_lines_struct == n_of_lines_argument_int){
+                        free_struct(head);
+                    }
+                }
+
                 tmp_ptr = line_ptr;
                 line_ptr = (LINE *) malloc(sizeof(LINE));
                 line_ptr->p_next_line = NULL;
-                // We connect our newly created struct to the last one
-                tmp_ptr->p_next_line = line_ptr;
+                // We connect our newly created struct to the last one if we didnt free the chain before
+                if(tmp_ptr != NULL){
+                    tmp_ptr->p_next_line = line_ptr;
+                }
                 i = 0;
             }
             line_ptr->line[i++] = c;
