@@ -33,6 +33,9 @@ int main(int argc, char *argv[]) {
     // argc == 2 just containing filename with default 10 last lines being printed
     // argc == 3 we have argument -n with number, we tell the program with flag that it should read from stdin
     // argc == 4 we have argument -n with number and filename
+    if (argc == 2) {
+        stdin_flag = 0;
+    }
     if (argc >= 3) {
         // We tell the program it should expect a filename in arguments
         if (argc == 4) {
