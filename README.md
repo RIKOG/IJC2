@@ -9,11 +9,11 @@
    parametr -n číslo, bude se tisknout tolik posledních řádků,
    kolik je zadáno parametrem 'číslo' > 0.
    Případná chybová hlášení tiskněte do stderr. Příklady:
-
+```
    tail soubor
    tail -n +3 soubor
    tail -n 20 <soubor
-
+```
    [Poznámka: výsledky by měly být +-stejné jako u POSIX příkazu tail]
 
    Je povolen implementační limit na délku řádku (např. 511 znaků),
