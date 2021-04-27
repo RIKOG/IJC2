@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-// Riesenie IJC-DU2, priklad a), 18.4.2021
+// Riesenie IJC-DU2, priklad a), 26.4.2021
 // Autor: Richard Gajdosik, FIT
 // Prelozene: gcc 9.3
 
@@ -127,9 +127,14 @@ int main(int argc, char *argv[]) {
                 }
             } else if (posix_sign_plus == 1) {
                 if (n_of_lines_struct == n_of_lines_argument_int) {
-                    free_struct(head);
-                    line_ptr = NULL;
-                    head = NULL;
+                    // Want to delete everything except the one line we are on
+                    LINE *tmp_ptr_10 = head->p_next_line;
+                    while (head->p_next_line != NULL) {
+                        tmp_ptr_10 = head->p_next_line;
+                        free(head);
+                        head = tmp_ptr_10;
+                    }
+                    head = line_ptr;
                 }
             }
             tmp_ptr = line_ptr;
@@ -161,6 +166,16 @@ int main(int argc, char *argv[]) {
     // If last line in text file ends just with EOF if statement doesnt get triggered, we need to set line[i] to \0
     n_of_lines_struct++;
     line_ptr->line[i] = '\0';
+    if (n_of_lines_struct == n_of_lines_argument_int) {
+        // Want to delete everything except the one line we are on
+        LINE *tmp_ptr_10 = head->p_next_line;
+        while (head->p_next_line != NULL) {
+            tmp_ptr_10 = head->p_next_line;
+            free(head);
+            head = tmp_ptr_10;
+        }
+        head = line_ptr;
+    }
 
     /* If we only read one line, it wont get saved in head pointer in the main loop so we have to do it now, or
      it wont manage to check conditions if we even want that one line */
@@ -181,7 +196,7 @@ int main(int argc, char *argv[]) {
             }
         } else {
             // Special case where there is argument -n +x bigger than lines loaded (if statement in main loop doesnt get triggered)
-            if (posix_sign_plus == 1 && n_of_lines_struct <= n_of_lines_argument_int) {
+            if (posix_sign_plus == 1 && n_of_lines_struct < n_of_lines_argument_int) {
             } else {
                 printf("%s\n", tmp_ptr->line);
             }
