@@ -23,7 +23,7 @@
 
 2) (max 10b)
    Přepište následující C++ program do jazyka ISO C
-``
+```
    // wordcount-.cc
    // Použijte: g++ -std=c++11 -O2
    // Příklad použití STL kontejneru unordered_map<>
@@ -50,7 +50,7 @@
             //      klíč/slovo          hodnota/počet
             // prvky kontejneru typu "map" jsou dvojice (klíč,hodnota)
    }
-``
+```
    Výstupy programů musí být pro stejný vstup stejné (kromě pořadí a příliš
    dlouhých slov).
 
