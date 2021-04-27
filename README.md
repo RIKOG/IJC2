@@ -23,7 +23,7 @@
 
 2) (max 10b)
    Přepište následující C++ program do jazyka ISO C
-
+``
    // wordcount-.cc
    // Použijte: g++ -std=c++11 -O2
    // Příklad použití STL kontejneru unordered_map<>
@@ -50,7 +50,7 @@
             //      klíč/slovo          hodnota/počet
             // prvky kontejneru typu "map" jsou dvojice (klíč,hodnota)
    }
-
+``
    Výstupy programů musí být pro stejný vstup stejné (kromě pořadí a příliš
    dlouhých slov).
 
@@ -75,7 +75,7 @@
 
     - Vhodná rozptylovací funkce pro řetězce je podle literatury
       (http://www.cse.yorku.ca/~oz/hash.html - varianta sdbm):
-
+``
       size_t htab_hash_function(const char *str) {
       uint32_t h=0;     // musí mít 32 bitů
       const unsigned char *p;
@@ -83,7 +83,7 @@
       h = 65599*h + *p;
       return h;
       }
-
+``
       její výsledek modulo arr_size určuje index do tabulky:
       index = (htab_hash_function("mystring") % arr_size);
       Zkuste použít i jiné podobné funkce a porovnejte efektivitu.
@@ -118,6 +118,7 @@
     - Napište funkce podle následujícího hlavičkového souboru (API):
 
 ==================================================================
+``
 // htab.h -- rozhraní knihovny htab (řešení IJC-DU2)
 // Licence: žádná (Public domain)
 
@@ -164,6 +165,7 @@ void htab_clear(htab_t * t);    // ruší všechny záznamy
 void htab_free(htab_t * t);     // destruktor tabulky
 
 #endif // __HTAB_H__
+``
 ==================================================================
 
       Hlavičkový soubor můžete celý převzít (je v "Public domain").
